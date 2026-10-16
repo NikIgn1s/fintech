@@ -13,6 +13,7 @@ import dev.finflow.support.TestUsers;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -39,7 +40,8 @@ class StatementApiTest extends AbstractPostgresTest {
     }
 
     private void cash(String path, String token, long accountId, String amount) throws Exception {
-        mvc.perform(post(path).header("Authorization", token).contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(post(path).header("Authorization", token)
+                .header("Idempotency-Key", UUID.randomUUID().toString()).contentType(MediaType.APPLICATION_JSON)
                         .content("{\"accountId\":" + accountId + ",\"amount\":" + amount + "}"))
                 .andExpect(status().isCreated());
     }

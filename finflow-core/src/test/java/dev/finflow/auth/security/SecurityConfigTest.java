@@ -9,11 +9,13 @@ import dev.finflow.auth.domain.Role;
 import dev.finflow.common.config.ClockConfig;
 import dev.finflow.common.error.GlobalExceptionHandler;
 import dev.finflow.common.error.ProblemResponseWriter;
+import dev.finflow.common.idempotency.IdempotencyStore;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.test.context.TestPropertySource;
@@ -28,6 +30,9 @@ import org.springframework.web.bind.annotation.RestController;
         SecurityConfigTest.ProbeController.class})
 @TestPropertySource(properties = "finflow.jwt.secret=0123456789abcdef0123456789abcdef0123456789abcdef")
 class SecurityConfigTest {
+
+    @MockBean
+    private IdempotencyStore idempotencyStore;
 
     @Autowired
     private MockMvc mvc;

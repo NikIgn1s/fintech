@@ -2,6 +2,7 @@ package dev.finflow.account.service;
 
 import dev.finflow.account.api.AccountBalanceProvider;
 import dev.finflow.account.api.AccountMapper;
+import dev.finflow.account.api.AccountRef;
 import dev.finflow.account.api.AccountResponse;
 import dev.finflow.account.api.OpenAccountRequest;
 import dev.finflow.account.domain.Account;
@@ -54,6 +55,15 @@ public class AccountService {
         return own.stream()
                 .map(account -> mapper.toResponse(account, balances.getOrDefault(account.getId(), ZERO_BALANCE)))
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public AccountRef getTransferTarget(Long accountId) {
+        return accounts.findById(accountId)
+                .filter(account -> !account.getType().isSystem())
+                .map(account -> new AccountRef(account.getId(), account.getUserId(), account.getCurrency(),
+                        account.getStatus()))
+                .orElseThrow(() -> new NotFoundException("Recipient account " + accountId + " not found"));
     }
 
     @Transactional(readOnly = true)

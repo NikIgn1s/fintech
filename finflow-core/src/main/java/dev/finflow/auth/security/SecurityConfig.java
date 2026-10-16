@@ -1,5 +1,8 @@
 package dev.finflow.auth.security;
 
+import dev.finflow.common.error.ProblemResponseWriter;
+import dev.finflow.common.idempotency.IdempotencyFilter;
+import dev.finflow.common.idempotency.IdempotencyStore;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -27,7 +30,8 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http, JwtService jwtService,
-            ProblemAuthenticationEntryPoint entryPoint, ProblemAccessDeniedHandler accessDeniedHandler)
+            ProblemAuthenticationEntryPoint entryPoint, ProblemAccessDeniedHandler accessDeniedHandler,
+            IdempotencyStore idempotencyStore, ProblemResponseWriter problemResponseWriter)
             throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
@@ -41,7 +45,9 @@ public class SecurityConfig {
                 .exceptionHandling(handling -> handling
                         .authenticationEntryPoint(entryPoint)
                         .accessDeniedHandler(accessDeniedHandler))
-                .addFilterBefore(new JwtAuthenticationFilter(jwtService), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(jwtService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new IdempotencyFilter(idempotencyStore, problemResponseWriter),
+                        JwtAuthenticationFilter.class);
         return http.build();
     }
 

@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.finflow.support.AbstractPostgresTest;
 import dev.finflow.support.TestUsers;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -36,7 +37,8 @@ class CashApiTest extends AbstractPostgresTest {
     }
 
     private ResultActions cash(String path, String token, long accountId, String amount) throws Exception {
-        return mvc.perform(post(path).header("Authorization", token).contentType(MediaType.APPLICATION_JSON)
+        return mvc.perform(post(path).header("Authorization", token)
+                .header("Idempotency-Key", UUID.randomUUID().toString()).contentType(MediaType.APPLICATION_JSON)
                 .content("{\"accountId\":" + accountId + ",\"amount\":" + amount + "}"));
     }
 
