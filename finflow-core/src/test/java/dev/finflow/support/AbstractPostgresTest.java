@@ -6,7 +6,8 @@ import org.testcontainers.containers.PostgreSQLContainer;
 
 public abstract class AbstractPostgresTest {
 
-    private static final PostgreSQLContainer<?> POSTGRES = new PostgreSQLContainer<>("postgres:16");
+    private static final PostgreSQLContainer<?> POSTGRES = new PostgreSQLContainer<>("postgres:16")
+            .withCommand("postgres", "-c", "max_connections=500");
 
     static {
         POSTGRES.start();

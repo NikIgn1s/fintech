@@ -10,6 +10,7 @@ import dev.finflow.common.config.ClockConfig;
 import dev.finflow.common.error.GlobalExceptionHandler;
 import dev.finflow.common.error.ProblemResponseWriter;
 import dev.finflow.common.idempotency.IdempotencyStore;
+import dev.finflow.common.ratelimit.RateLimiter;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,9 @@ class SecurityConfigTest {
 
     @MockBean
     private IdempotencyStore idempotencyStore;
+
+    @MockBean
+    private RateLimiter rateLimiter;
 
     @Autowired
     private MockMvc mvc;

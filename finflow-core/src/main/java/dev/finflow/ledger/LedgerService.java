@@ -9,6 +9,7 @@ import dev.finflow.ledger.domain.Posting;
 import dev.finflow.ledger.domain.UnbalancedPostingException;
 import dev.finflow.ledger.repository.AccountBalanceRepository;
 import dev.finflow.ledger.repository.LedgerTransactionRepository;
+import jakarta.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.Instant;
@@ -31,6 +32,7 @@ public class LedgerService {
 
     private final AccountBalanceRepository balances;
     private final LedgerTransactionRepository transactions;
+    private final EntityManager entityManager;
     private final Clock clock;
 
     @Transactional(propagation = Propagation.MANDATORY)
@@ -41,7 +43,9 @@ public class LedgerService {
         }
 
         Map<Long, BigDecimal> netByAccount = netByAccount(postings);
-        Map<Long, AccountBalance> locked = balances.lockAllByIdsOrdered(netByAccount.keySet()).stream()
+        List<AccountBalance> lockedRows = balances.lockAllByIdsOrdered(netByAccount.keySet());
+        lockedRows.forEach(entityManager::refresh);
+        Map<Long, AccountBalance> locked = lockedRows.stream()
                 .collect(Collectors.toMap(AccountBalance::getAccountId, Function.identity()));
         if (locked.size() != netByAccount.size()) {
             throw new IllegalArgumentException("Unknown accounts in postings: " + netByAccount.keySet());

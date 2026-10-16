@@ -30,6 +30,7 @@ public class TransferService {
     private final LedgerService ledger;
     private final TransferRepository transfers;
     private final TransferMapper mapper;
+    private final TransferLimitGuard limitGuard;
     private final Clock clock;
 
     @Transactional
@@ -49,6 +50,7 @@ public class TransferService {
         }
 
         Money amount = Money.of(command.amount(), source.currency());
+        limitGuard.check(userId, amount);
         Transfer transfer = transfers.save(Transfer.create(source.id(), target.id(), amount,
                 command.description(), userId, clock.instant()));
 

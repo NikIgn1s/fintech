@@ -16,5 +16,19 @@ services:
       timeout: 3s
       retries: 10
 
+  finflow-core:
+    build: ../finflow-core
+    container_name: finflow-core
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/finflow
+      DB_USER: finflow
+      DB_PASSWORD: ${PG_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required}
+    ports:
+      - "${CORE_PORT:-8080}:8080"
+
 volumes:
   pgdata: {}

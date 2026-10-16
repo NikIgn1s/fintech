@@ -28,6 +28,7 @@ val mapstructVersion = "1.6.2"
 val jjwtVersion = "0.12.6"
 val springdocVersion = "2.6.0"
 val testcontainersVersion = "1.20.3"
+val bucket4jVersion = "8.10.1"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -40,6 +41,8 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocVersion")
     implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
     implementation("org.mapstruct:mapstruct:$mapstructVersion")
+    implementation("com.bucket4j:bucket4j-core:$bucket4jVersion")
+    implementation("com.github.ben-manes.caffeine:caffeine")
     runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")

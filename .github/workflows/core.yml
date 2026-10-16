@@ -1,0 +1,48 @@
+name: core
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "finflow-core/**"
+      - ".github/workflows/core.yml"
+  pull_request:
+    paths:
+      - "finflow-core/**"
+      - ".github/workflows/core.yml"
+
+concurrency:
+  group: core-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: finflow-core
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Build and test
+        run: |
+          chmod +x gradlew
+          ./gradlew build --no-daemon
+
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: core-reports
+          path: |
+            finflow-core/build/reports/tests
+            finflow-core/build/reports/jacoco
+          if-no-files-found: ignore

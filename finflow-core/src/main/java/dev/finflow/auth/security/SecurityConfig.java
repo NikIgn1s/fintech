@@ -3,6 +3,8 @@ package dev.finflow.auth.security;
 import dev.finflow.common.error.ProblemResponseWriter;
 import dev.finflow.common.idempotency.IdempotencyFilter;
 import dev.finflow.common.idempotency.IdempotencyStore;
+import dev.finflow.common.ratelimit.RateLimitFilter;
+import dev.finflow.common.ratelimit.RateLimiter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -31,8 +33,8 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http, JwtService jwtService,
             ProblemAuthenticationEntryPoint entryPoint, ProblemAccessDeniedHandler accessDeniedHandler,
-            IdempotencyStore idempotencyStore, ProblemResponseWriter problemResponseWriter)
-            throws Exception {
+            IdempotencyStore idempotencyStore, RateLimiter rateLimiter,
+            ProblemResponseWriter problemResponseWriter) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
@@ -46,8 +48,10 @@ public class SecurityConfig {
                         .authenticationEntryPoint(entryPoint)
                         .accessDeniedHandler(accessDeniedHandler))
                 .addFilterBefore(new JwtAuthenticationFilter(jwtService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new RateLimitFilter(rateLimiter, problemResponseWriter),
+                        JwtAuthenticationFilter.class)
                 .addFilterAfter(new IdempotencyFilter(idempotencyStore, problemResponseWriter),
-                        JwtAuthenticationFilter.class);
+                        RateLimitFilter.class);
         return http.build();
     }
 

@@ -14,4 +14,7 @@ public interface AccountBalanceRepository extends JpaRepository<AccountBalance, 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select b from AccountBalance b where b.accountId in :ids order by b.accountId")
     List<AccountBalance> lockAllByIdsOrdered(@Param("ids") Collection<Long> ids);
+
+    @Query("select b.accountId as accountId, b.balance as balance from AccountBalance b where b.accountId in :ids")
+    List<BalanceView> findViewsByAccountIdIn(@Param("ids") Collection<Long> ids);
 }
