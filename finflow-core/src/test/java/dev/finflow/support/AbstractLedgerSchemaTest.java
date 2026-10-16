@@ -35,7 +35,7 @@ public abstract class AbstractLedgerSchemaTest extends AbstractPostgresTest {
     }
 
     protected long systemAccount(String type) {
-        return jdbc.queryForObject("select id from accounts where type = ?", Long.class, type);
+        return jdbc.queryForObject("select id from accounts where type = ? and currency = 'RUB' and user_id is null", Long.class, type);
     }
 
     protected long newLedgerTransaction(String type) {

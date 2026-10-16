@@ -47,6 +47,7 @@ class AccountApiTest extends AbstractPostgresTest {
                 .andExpect(jsonPath("$.type").value("USER_WALLET"))
                 .andExpect(jsonPath("$.currency").value("RUB"))
                 .andExpect(jsonPath("$.status").value("ACTIVE"))
+                .andExpect(jsonPath("$.balance").value(0))
                 .andExpect(jsonPath("$.userId").doesNotExist());
     }
 

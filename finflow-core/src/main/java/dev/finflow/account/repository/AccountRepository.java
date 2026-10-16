@@ -1,6 +1,7 @@
 package dev.finflow.account.repository;
 
 import dev.finflow.account.domain.Account;
+import dev.finflow.account.domain.AccountType;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -13,4 +14,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     Optional<Account> findByIdAndUserId(Long id, UUID userId);
 
     long countByUserId(UUID userId);
+
+    Optional<Account> findByTypeAndCurrencyAndUserIdIsNull(AccountType type, String currency);
 }

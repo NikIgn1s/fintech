@@ -1,5 +1,6 @@
 package dev.finflow.account.service;
 
+import dev.finflow.account.api.AccountBalanceProvider;
 import dev.finflow.account.api.AccountMapper;
 import dev.finflow.account.api.AccountResponse;
 import dev.finflow.account.api.OpenAccountRequest;
@@ -7,7 +8,10 @@ import dev.finflow.account.domain.Account;
 import dev.finflow.account.repository.AccountRepository;
 import dev.finflow.common.error.BusinessRuleException;
 import dev.finflow.common.error.NotFoundException;
+import dev.finflow.common.money.Money;
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +26,11 @@ public class AccountService {
     static final Set<String> SUPPORTED_CURRENCIES = Set.of("RUB", "USD", "EUR");
     static final int MAX_ACCOUNTS_PER_USER = 10;
 
+    private static final BigDecimal ZERO_BALANCE = BigDecimal.ZERO.setScale(Money.SCALE);
+
     private final AccountRepository accounts;
     private final AccountMapper mapper;
+    private final AccountBalanceProvider balanceProvider;
 
     @Transactional
     public AccountResponse open(UUID userId, OpenAccountRequest request) {
@@ -37,18 +44,23 @@ public class AccountService {
                     "A user can have at most " + MAX_ACCOUNTS_PER_USER + " accounts");
         }
         Account account = Account.open(userId, request.type().toAccountType(), currency);
-        return mapper.toResponse(accounts.save(account));
+        return mapper.toResponse(accounts.save(account), ZERO_BALANCE);
     }
 
     @Transactional(readOnly = true)
     public List<AccountResponse> listOwn(UUID userId) {
-        return mapper.toResponses(accounts.findByUserIdOrderById(userId));
+        List<Account> own = accounts.findByUserIdOrderById(userId);
+        Map<Long, BigDecimal> balances = balanceProvider.balancesOf(own.stream().map(Account::getId).toList());
+        return own.stream()
+                .map(account -> mapper.toResponse(account, balances.getOrDefault(account.getId(), ZERO_BALANCE)))
+                .toList();
     }
 
     @Transactional(readOnly = true)
     public AccountResponse getOwn(UUID userId, Long accountId) {
-        return accounts.findByIdAndUserId(accountId, userId)
-                .map(mapper::toResponse)
+        Account account = accounts.findByIdAndUserId(accountId, userId)
                 .orElseThrow(() -> new NotFoundException("Account " + accountId + " not found"));
+        BigDecimal balance = balanceProvider.balancesOf(List.of(accountId)).getOrDefault(accountId, ZERO_BALANCE);
+        return mapper.toResponse(account, balance);
     }
 }

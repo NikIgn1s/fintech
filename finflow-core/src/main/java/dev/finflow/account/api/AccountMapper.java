@@ -1,13 +1,13 @@
 package dev.finflow.account.api;
 
 import dev.finflow.account.domain.Account;
-import java.util.List;
+import java.math.BigDecimal;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper
 public interface AccountMapper {
 
-    AccountResponse toResponse(Account account);
-
-    List<AccountResponse> toResponses(List<Account> accounts);
+    @Mapping(target = "balance", source = "balance")
+    AccountResponse toResponse(Account account, BigDecimal balance);
 }
