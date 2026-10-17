@@ -2,6 +2,7 @@ package dev.finflow.common.outbox;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -10,6 +11,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface OutboxRepository extends JpaRepository<OutboxEvent, UUID> {
+
+    Optional<OutboxEvent> findFirstByAggregateIdAndEventTypeOrderByCreatedAtDesc(String aggregateId,
+            String eventType);
 
     @Query(value = """
             SELECT * FROM outbox_events

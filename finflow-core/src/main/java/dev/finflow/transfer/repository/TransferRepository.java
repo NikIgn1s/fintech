@@ -7,11 +7,15 @@ import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface TransferRepository extends JpaRepository<Transfer, UUID> {
+
+    List<Transfer> findByStatusAndCreatedAtBeforeOrderByCreatedAt(TransferStatus status, Instant before,
+            Pageable pageable);
 
     @Query("""
             select coalesce(sum(t.amount), 0) from Transfer t

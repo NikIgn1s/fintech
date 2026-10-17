@@ -15,7 +15,9 @@ import dev.finflow.support.KafkaProbe;
 import dev.finflow.transfer.service.TransferService;
 import java.math.BigDecimal;
 import java.time.Duration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.jupiter.api.BeforeEach;
@@ -162,6 +164,35 @@ class FraudResultKafkaTest extends AbstractKafkaTest {
         awaitStatus(marker.transfer().id(), "COMPLETED");
         assertThat(fixtures.status(id)).isEqualTo("COMPLETED");
         assertThat(fixtures.fraudCheckCount(id)).isEqualTo(1);
+    }
+
+    @Test
+    void invalidMessagesGoStraightToTheDeadLetterTopic() throws Exception {
+        String malformedKey = "malformed-" + UUID.randomUUID();
+        String semanticKey = "semantic-" + UUID.randomUUID();
+        String semanticValue = objectMapper.writeValueAsString(
+                fixtures.resultEnvelope(UUID.randomUUID(), UUID.randomUUID(), "APPROVE", "5", List.of()));
+
+        kafka.send(Topics.TRANSFERS_CHECK_RESULT, malformedKey, "this is not json").get();
+        kafka.send(Topics.TRANSFERS_CHECK_RESULT, semanticKey, semanticValue).get();
+
+        try (KafkaProbe probe = new KafkaProbe(bootstrapServers(), Topics.TRANSFERS_CHECK_RESULT + ".DLT")) {
+            Map<String, ConsumerRecord<String, String>> parked = new HashMap<>();
+            long deadline = System.nanoTime() + TIMEOUT.toNanos();
+            while (parked.size() < 2 && System.nanoTime() < deadline) {
+                for (ConsumerRecord<String, String> record : probe.poll(1, Duration.ofSeconds(2))) {
+                    parked.put(record.key(), record);
+                }
+            }
+            assertThat(parked).containsKeys(malformedKey, semanticKey);
+            assertThat(parked.get(malformedKey).value()).isEqualTo("this is not json");
+            assertThat(parked.get(semanticKey).value()).isEqualTo(semanticValue);
+            String exception = new String(parked.get(malformedKey).headers()
+                    .lastHeader("kafka_dlt-exception-fqcn").value());
+            assertThat(exception).contains("ListenerExecutionFailedException");
+            assertThat(new String(parked.get(malformedKey).headers().lastHeader("kafka_dlt-original-topic").value()))
+                    .isEqualTo(Topics.TRANSFERS_CHECK_RESULT);
+        }
     }
 
     @Test
