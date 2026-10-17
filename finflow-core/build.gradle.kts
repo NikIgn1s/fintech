@@ -29,6 +29,7 @@ val jjwtVersion = "0.12.6"
 val springdocVersion = "2.6.0"
 val testcontainersVersion = "1.20.3"
 val bucket4jVersion = "8.10.1"
+val shedlockVersion = "5.16.0"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -43,6 +44,9 @@ dependencies {
     implementation("org.mapstruct:mapstruct:$mapstructVersion")
     implementation("com.bucket4j:bucket4j-core:$bucket4jVersion")
     implementation("com.github.ben-manes.caffeine:caffeine")
+    implementation("org.springframework.kafka:spring-kafka")
+    implementation("net.javacrumbs.shedlock:shedlock-spring:$shedlockVersion")
+    implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:$shedlockVersion")
     runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")
@@ -56,6 +60,7 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.testcontainers:junit-jupiter:$testcontainersVersion")
     testImplementation("org.testcontainers:postgresql:$testcontainersVersion")
+    testImplementation("org.testcontainers:kafka:$testcontainersVersion")
     testCompileOnly("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")
 }
@@ -67,6 +72,7 @@ tasks.withType<JavaCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+    environment("OUTBOX_ENABLED", "false")
     finalizedBy(tasks.jacocoTestReport)
 }
 

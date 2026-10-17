@@ -18,6 +18,17 @@ spring:
   flyway:
     enabled: true
     locations: classpath:db/migration
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      acks: all
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      properties:
+        enable.idempotence: true
+        max.block.ms: 5000
+        request.timeout.ms: 5000
+        delivery.timeout.ms: 10000
   jackson:
     default-property-inclusion: non_null
     deserialization:
@@ -43,3 +54,10 @@ finflow:
     access-ttl: 15m
     refresh-ttl: 7d
     issuer: finflow
+  outbox:
+    enabled: ${OUTBOX_ENABLED:true}
+    poll-interval: 500
+    initial-delay: 1000
+    batch-size: 100
+    send-timeout: 5s
+    retention: 7d
