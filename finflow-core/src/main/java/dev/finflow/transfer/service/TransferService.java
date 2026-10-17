@@ -6,13 +6,17 @@ import dev.finflow.account.domain.AccountStatus;
 import dev.finflow.account.service.AccountService;
 import dev.finflow.account.service.SystemAccountService;
 import dev.finflow.common.error.BusinessRuleException;
+import dev.finflow.common.messaging.EventTypes;
+import dev.finflow.common.messaging.Topics;
 import dev.finflow.common.money.Money;
+import dev.finflow.common.outbox.OutboxPublisher;
 import dev.finflow.ledger.LedgerService;
 import dev.finflow.ledger.domain.LedgerTransactionType;
 import dev.finflow.ledger.domain.Posting;
 import dev.finflow.transfer.api.TransferMapper;
 import dev.finflow.transfer.api.TransferResponse;
 import dev.finflow.transfer.domain.Transfer;
+import dev.finflow.transfer.messaging.TransferCheckRequested;
 import dev.finflow.transfer.repository.TransferRepository;
 import java.time.Clock;
 import java.util.List;
@@ -31,6 +35,8 @@ public class TransferService {
     private final TransferRepository transfers;
     private final TransferMapper mapper;
     private final TransferLimitGuard limitGuard;
+    private final FraudFeatureCalculator featureCalculator;
+    private final OutboxPublisher outbox;
     private final Clock clock;
 
     @Transactional
@@ -51,13 +57,17 @@ public class TransferService {
 
         Money amount = Money.of(command.amount(), source.currency());
         limitGuard.check(userId, amount);
-        Transfer transfer = transfers.save(Transfer.create(source.id(), target.id(), amount,
-                command.description(), userId, clock.instant()));
+        Transfer draft = Transfer.create(source.id(), target.id(), amount, command.description(), userId,
+                clock.instant());
+        TransferCheckRequested checkRequest = featureCalculator.calculate(userId, source, target, draft, amount);
+        Transfer transfer = transfers.save(draft);
 
         Long suspense = systemAccounts.suspenseFor(source.currency());
         ledger.post(LedgerTransactionType.TRANSFER_RESERVE, transfer.getId(), List.of(
                 new Posting(source.id(), amount.negate()),
                 new Posting(suspense, amount)));
+        outbox.publish("transfer", transfer.getId().toString(), EventTypes.TRANSFER_CHECK_REQUESTED,
+                Topics.TRANSFERS_CHECK, checkRequest);
         return mapper.toResponse(transfer);
     }
 

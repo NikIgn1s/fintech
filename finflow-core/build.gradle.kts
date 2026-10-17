@@ -73,6 +73,7 @@ tasks.withType<JavaCompile> {
 tasks.withType<Test> {
     useJUnitPlatform()
     environment("OUTBOX_ENABLED", "false")
+    environment("KAFKA_LISTENERS_ENABLED", "false")
     finalizedBy(tasks.jacocoTestReport)
 }
 

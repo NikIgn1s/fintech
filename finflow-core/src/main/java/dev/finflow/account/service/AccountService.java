@@ -62,7 +62,7 @@ public class AccountService {
         return accounts.findById(accountId)
                 .filter(account -> !account.getType().isSystem())
                 .map(account -> new AccountRef(account.getId(), account.getUserId(), account.getCurrency(),
-                        account.getStatus()))
+                        account.getStatus(), account.getCreatedAt()))
                 .orElseThrow(() -> new NotFoundException("Recipient account " + accountId + " not found"));
     }
 

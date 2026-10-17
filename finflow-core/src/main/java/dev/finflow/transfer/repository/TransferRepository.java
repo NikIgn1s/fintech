@@ -21,6 +21,23 @@ public interface TransferRepository extends JpaRepository<Transfer, UUID> {
     BigDecimal sumInitiatedSince(@Param("userId") UUID userId, @Param("currency") String currency,
             @Param("since") Instant since, @Param("statuses") Collection<TransferStatus> statuses);
 
+    @Query("""
+            select count(t) from Transfer t
+            where t.initiatedBy = :userId and t.currency = :currency
+              and t.createdAt >= :since and t.status in :statuses
+            """)
+    long countInitiatedSince(@Param("userId") UUID userId, @Param("currency") String currency,
+            @Param("since") Instant since, @Param("statuses") Collection<TransferStatus> statuses);
+
+    @Query("""
+            select count(t) from Transfer t
+            where t.toAccountId = :accountId and t.createdAt >= :since and t.status in :statuses
+            """)
+    long countIncomingSince(@Param("accountId") Long accountId, @Param("since") Instant since,
+            @Param("statuses") Collection<TransferStatus> statuses);
+
+    boolean existsByInitiatedByAndToAccountIdAndStatus(UUID initiatedBy, Long toAccountId, TransferStatus status);
+
     @Query(value = """
             SELECT t.* FROM transfers t
             WHERE ((:outgoing AND t.initiated_by = :userId)

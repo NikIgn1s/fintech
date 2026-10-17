@@ -29,6 +29,12 @@ spring:
         max.block.ms: 5000
         request.timeout.ms: 5000
         delivery.timeout.ms: 10000
+    consumer:
+      group-id: finflow-core
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
   jackson:
     default-property-inclusion: non_null
     deserialization:
@@ -61,3 +67,6 @@ finflow:
     batch-size: 100
     send-timeout: 5s
     retention: 7d
+  kafka:
+    listeners:
+      enabled: ${KAFKA_LISTENERS_ENABLED:true}
