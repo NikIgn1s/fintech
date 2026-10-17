@@ -16,7 +16,7 @@ class JwtServiceTest {
     private static final String SECRET = "0123456789abcdef0123456789abcdef0123456789abcdef";
 
     private JwtService service(String secret, Clock clock) {
-        return new JwtService(new JwtProperties(secret, Duration.ofMinutes(15), "finflow"), clock);
+        return new JwtService(new JwtProperties(secret, Duration.ofMinutes(15), Duration.ofDays(7), "finflow"), clock);
     }
 
     @Test

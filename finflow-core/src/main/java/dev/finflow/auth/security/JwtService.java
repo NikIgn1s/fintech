@@ -64,6 +64,10 @@ public class JwtService {
         }
     }
 
+    public Duration refreshTtl() {
+        return properties.refreshTtl();
+    }
+
     public Duration accessTtl() {
         return properties.accessTtl();
     }

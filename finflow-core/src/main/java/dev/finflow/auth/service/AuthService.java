@@ -19,14 +19,16 @@ public class AuthService {
     private final UserRepository users;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final RefreshTokenService refreshTokens;
     private final UserMapper userMapper;
     private final String timingGuardHash;
 
     public AuthService(UserRepository users, PasswordEncoder passwordEncoder, JwtService jwtService,
-            UserMapper userMapper) {
+            RefreshTokenService refreshTokens, UserMapper userMapper) {
         this.users = users;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
+        this.refreshTokens = refreshTokens;
         this.userMapper = userMapper;
         this.timingGuardHash = passwordEncoder.encode("timing-guard");
     }
@@ -42,7 +44,7 @@ public class AuthService {
         return userMapper.toResponse(users.save(user));
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public AuthResponse login(LoginRequest request) {
         User user = users.findByEmail(User.normalizeEmail(request.email())).orElse(null);
         String hash = user == null ? timingGuardHash : user.getPasswordHash();
@@ -50,11 +52,21 @@ public class AuthService {
         if (user == null || !matches) {
             throw new InvalidCredentialsException();
         }
-        return issueTokens(user);
+        return respond(user, refreshTokens.issue(user.getId()));
     }
 
-    private AuthResponse issueTokens(User user) {
+    public AuthResponse refresh(String rawRefreshToken) {
+        RefreshTokenService.Rotation rotation = refreshTokens.rotate(rawRefreshToken);
+        User user = users.findById(rotation.userId()).orElseThrow(InvalidRefreshTokenException::new);
+        return respond(user, rotation.refreshToken());
+    }
+
+    public void logout(String rawRefreshToken) {
+        refreshTokens.revoke(rawRefreshToken);
+    }
+
+    private AuthResponse respond(User user, String refreshToken) {
         String accessToken = jwtService.generateAccessToken(user.getId(), user.getRole());
-        return AuthResponse.bearer(accessToken, jwtService.accessTtl().toSeconds());
+        return AuthResponse.bearer(accessToken, refreshToken, jwtService.accessTtl().toSeconds());
     }
 }

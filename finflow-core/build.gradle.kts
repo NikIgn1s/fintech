@@ -76,3 +76,7 @@ tasks.jacocoTestReport {
         xml.required = true
     }
 }
+
+tasks.bootJar {
+    archiveFileName = "app.jar"
+}

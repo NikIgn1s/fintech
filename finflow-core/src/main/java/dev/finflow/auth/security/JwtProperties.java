@@ -8,5 +8,6 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
 public record JwtProperties(
         String secret,
         @DefaultValue("15m") Duration accessTtl,
+        @DefaultValue("7d") Duration refreshTtl,
         @DefaultValue("finflow") String issuer) {
 }
