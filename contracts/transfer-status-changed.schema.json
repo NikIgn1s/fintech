@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://finflow.dev/contracts/transfer-status-changed.schema.json",
+  "title": "TransferStatusChanged",
+  "description": "Published by finflow-core to transfers.status-changed when a transfer leaves the pending state",
+  "type": "object",
+  "required": ["eventId", "eventType", "version", "occurredAt", "payload"],
+  "properties": {
+    "eventId": { "type": "string", "format": "uuid" },
+    "eventType": { "const": "TransferStatusChanged" },
+    "version": { "type": "integer", "minimum": 1 },
+    "occurredAt": { "type": "string", "format": "date-time" },
+    "payload": {
+      "type": "object",
+      "required": ["transferId", "status", "fromUserId", "toUserId", "amount", "currency", "decidedBy", "occurredAt"],
+      "properties": {
+        "transferId": { "type": "string", "format": "uuid" },
+        "status": { "enum": ["PENDING_CHECK", "ON_HOLD", "COMPLETED", "REJECTED", "FAILED"] },
+        "fromUserId": { "type": "string", "format": "uuid" },
+        "toUserId": { "type": "string", "format": "uuid" },
+        "amount": { "type": "string", "pattern": "^[0-9]+\\.[0-9]{4}$" },
+        "currency": { "type": "string", "pattern": "^[A-Z]{3}$" },
+        "decidedBy": { "enum": ["ML", "RULES_FALLBACK", "ANALYST"] },
+        "occurredAt": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

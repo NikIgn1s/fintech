@@ -1,0 +1,16 @@
+{
+  "eventId": "0192f1b2-9e5c-7c32-9f40-7d3b6eaf2c44",
+  "eventType": "TransferStatusChanged",
+  "version": 1,
+  "occurredAt": "2026-10-15T00:12:46Z",
+  "payload": {
+    "transferId": "0192f1b2-7c39-7f0e-8a44-0c9d2b6e1f22",
+    "status": "ON_HOLD",
+    "fromUserId": "0192f1b0-1111-7000-8000-000000000001",
+    "toUserId": "0192f1b0-2222-7000-8000-000000000002",
+    "amount": "15000.0000",
+    "currency": "RUB",
+    "decidedBy": "ML",
+    "occurredAt": "2026-10-15T00:12:46Z"
+  }
+}

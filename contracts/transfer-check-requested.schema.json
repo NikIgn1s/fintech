@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://finflow.dev/contracts/transfer-check-requested.schema.json",
+  "title": "TransferCheckRequested",
+  "description": "Published by finflow-core to transfers.check when a transfer needs an anti-fraud decision",
+  "type": "object",
+  "required": ["eventId", "eventType", "version", "occurredAt", "payload"],
+  "properties": {
+    "eventId": { "type": "string", "format": "uuid" },
+    "eventType": { "const": "TransferCheckRequested" },
+    "version": { "type": "integer", "minimum": 1 },
+    "occurredAt": { "type": "string", "format": "date-time" },
+    "payload": {
+      "type": "object",
+      "required": [
+        "transferId", "fromUserId", "toUserId", "amount", "currency", "fromAccountAgeDays",
+        "isFirstTransferToRecipient", "transfersLast1h", "transfersLast24h", "amountLast24h",
+        "avgTransferAmount30d", "hourOfDay", "recipientAccountAgeDays", "recipientIncomingCount24h", "createdAt"
+      ],
+      "properties": {
+        "transferId": { "type": "string", "format": "uuid" },
+        "fromUserId": { "type": "string", "format": "uuid" },
+        "toUserId": { "type": "string", "format": "uuid" },
+        "amount": { "type": "string", "pattern": "^[0-9]+\\.[0-9]{4}$" },
+        "currency": { "type": "string", "pattern": "^[A-Z]{3}$" },
+        "fromAccountAgeDays": { "type": "integer", "minimum": 0 },
+        "isFirstTransferToRecipient": { "type": "boolean" },
+        "transfersLast1h": { "type": "integer", "minimum": 0 },
+        "transfersLast24h": { "type": "integer", "minimum": 0 },
+        "amountLast24h": { "type": "string", "pattern": "^[0-9]+\\.[0-9]{4}$" },
+        "avgTransferAmount30d": { "type": "string", "pattern": "^[0-9]+\\.[0-9]{4}$" },
+        "hourOfDay": { "type": "integer", "minimum": 0, "maximum": 23 },
+        "recipientAccountAgeDays": { "type": "integer", "minimum": 0 },
+        "recipientIncomingCount24h": { "type": "integer", "minimum": 0 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

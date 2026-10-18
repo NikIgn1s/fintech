@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://finflow.dev/contracts/fraud-check-completed.schema.json",
+  "title": "FraudCheckCompleted",
+  "description": "Published by finflow-ml to transfers.check.result with the anti-fraud decision",
+  "type": "object",
+  "required": ["eventId", "eventType", "version", "occurredAt", "payload"],
+  "properties": {
+    "eventId": { "type": "string", "format": "uuid" },
+    "eventType": { "const": "FraudCheckCompleted" },
+    "version": { "type": "integer", "minimum": 1 },
+    "occurredAt": { "type": "string", "format": "date-time" },
+    "payload": {
+      "type": "object",
+      "required": ["transferId", "score", "decision"],
+      "properties": {
+        "transferId": { "type": "string", "format": "uuid" },
+        "score": { "type": "number", "minimum": 0, "maximum": 1 },
+        "decision": { "enum": ["APPROVE", "HOLD"] },
+        "reasons": { "type": "array", "items": { "type": "string" } },
+        "modelVersion": { "type": "string", "maxLength": 50 }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

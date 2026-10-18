@@ -5,10 +5,12 @@ on:
     branches: [main]
     paths:
       - "finflow-core/**"
+      - "contracts/**"
       - ".github/workflows/core.yml"
   pull_request:
     paths:
       - "finflow-core/**"
+      - "contracts/**"
       - ".github/workflows/core.yml"
 
 concurrency:

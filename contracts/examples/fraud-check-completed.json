@@ -1,0 +1,13 @@
+{
+  "eventId": "0192f1b2-8d4b-7b21-8e3f-6c2a5d9f1b33",
+  "eventType": "FraudCheckCompleted",
+  "version": 1,
+  "occurredAt": "2026-10-15T00:12:45Z",
+  "payload": {
+    "transferId": "0192f1b2-7c39-7f0e-8a44-0c9d2b6e1f22",
+    "score": 0.87,
+    "decision": "HOLD",
+    "reasons": ["amount far above average", "new recipient"],
+    "modelVersion": "catboost-2026-10-01"
+  }
+}

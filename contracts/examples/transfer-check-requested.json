@@ -1,0 +1,23 @@
+{
+  "eventId": "0192f1b2-7c3a-7a10-9d2e-5b1f4c8e0a11",
+  "eventType": "TransferCheckRequested",
+  "version": 1,
+  "occurredAt": "2026-10-15T00:12:44Z",
+  "payload": {
+    "transferId": "0192f1b2-7c39-7f0e-8a44-0c9d2b6e1f22",
+    "fromUserId": "0192f1b0-1111-7000-8000-000000000001",
+    "toUserId": "0192f1b0-2222-7000-8000-000000000002",
+    "amount": "15000.0000",
+    "currency": "RUB",
+    "fromAccountAgeDays": 3,
+    "isFirstTransferToRecipient": true,
+    "transfersLast1h": 0,
+    "transfersLast24h": 7,
+    "amountLast24h": "48000.0000",
+    "avgTransferAmount30d": "2100.0000",
+    "hourOfDay": 0,
+    "recipientAccountAgeDays": 1,
+    "recipientIncomingCount24h": 4,
+    "createdAt": "2026-10-15T00:12:44Z"
+  }
+}
