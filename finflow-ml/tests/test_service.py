@@ -19,7 +19,11 @@ def test_health_reports_service_and_version(client: TestClient) -> None:
     response = client.get("/health")
 
     assert response.status_code == 200
-    assert response.json() == {"status": "UP", "service": "finflow-ml", "version": "0.1.0"}
+    body = response.json()
+    assert body["status"] == "UP"
+    assert body["service"] == "finflow-ml"
+    assert body["version"] == "0.1.0"
+    assert body["fraud_consumer"] == "DISABLED"
 
 
 def test_metrics_expose_request_counters(client: TestClient) -> None:

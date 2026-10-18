@@ -13,6 +13,10 @@ class Settings(BaseSettings):
     kafka_bootstrap_servers: str = "localhost:9092"
     fraud_hold_threshold: float = 0.7
     model_dir: Path = Path("artifacts")
+    fraud_consumer_enabled: bool = True
+    check_topic: str = "transfers.check"
+    result_topic: str = "transfers.check.result"
+    consumer_group: str = "finflow-ml"
 
 
 @lru_cache
