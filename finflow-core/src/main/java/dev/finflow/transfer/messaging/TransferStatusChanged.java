@@ -1,7 +1,6 @@
 package dev.finflow.transfer.messaging;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import dev.finflow.transfer.domain.FraudSource;
 import dev.finflow.transfer.domain.TransferStatus;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -14,6 +13,6 @@ public record TransferStatusChanged(
         UUID toUserId,
         @JsonFormat(shape = JsonFormat.Shape.STRING) BigDecimal amount,
         String currency,
-        FraudSource decidedBy,
+        String decidedBy,
         Instant occurredAt) {
 }

@@ -1,13 +1,8 @@
 package dev.finflow.transfer.service;
 
-import dev.finflow.account.service.AccountService;
-import dev.finflow.common.messaging.EventTypes;
-import dev.finflow.common.messaging.Topics;
-import dev.finflow.common.outbox.OutboxPublisher;
 import dev.finflow.transfer.domain.FraudCheck;
 import dev.finflow.transfer.domain.Transfer;
 import dev.finflow.transfer.domain.TransferStatus;
-import dev.finflow.transfer.messaging.TransferStatusChanged;
 import dev.finflow.transfer.repository.FraudCheckRepository;
 import dev.finflow.transfer.repository.TransferRepository;
 import java.time.Clock;
@@ -33,8 +28,7 @@ public class FraudDecisionService {
     private final TransferRepository transfers;
     private final FraudCheckRepository fraudChecks;
     private final TransferSettlement settlement;
-    private final OutboxPublisher outbox;
-    private final AccountService accounts;
+    private final TransferEventPublisher events;
     private final Clock clock;
 
     @Transactional
@@ -60,16 +54,8 @@ public class FraudDecisionService {
         }
         fraudChecks.save(FraudCheck.record(transfer.getId(), verdict.score(), verdict.modelVersion(),
                 verdict.decision(), verdict.source(), verdict.featuresJson(), now));
-        publishStatusChanged(transfer, verdict, now);
+        events.statusChanged(transfer, verdict.source().name(), now);
         return Outcome.APPLIED;
-    }
-
-    private void publishStatusChanged(Transfer transfer, FraudVerdict verdict, Instant now) {
-        var event = new TransferStatusChanged(transfer.getId(), transfer.getStatus(), transfer.getInitiatedBy(),
-                accounts.getTransferTarget(transfer.getToAccountId()).userId(), transfer.getAmount(),
-                transfer.getCurrency(), verdict.source(), now);
-        outbox.publish("transfer", transfer.getId().toString(), EventTypes.TRANSFER_STATUS_CHANGED,
-                Topics.TRANSFERS_STATUS_CHANGED, event);
     }
 
     private String holdReason(FraudVerdict verdict) {

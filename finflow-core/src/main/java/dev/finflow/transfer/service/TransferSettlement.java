@@ -27,4 +27,13 @@ public class TransferSettlement {
                 new Posting(suspense, amount.negate()),
                 new Posting(transfer.getToAccountId(), amount)));
     }
+
+    @Transactional(propagation = Propagation.MANDATORY)
+    public void refund(Transfer transfer) {
+        Money amount = Money.of(transfer.getAmount(), transfer.getCurrency());
+        Long suspense = systemAccounts.suspenseFor(transfer.getCurrency());
+        ledger.post(LedgerTransactionType.TRANSFER_REFUND, transfer.getId(), List.of(
+                new Posting(suspense, amount.negate()),
+                new Posting(transfer.getFromAccountId(), amount)));
+    }
 }
