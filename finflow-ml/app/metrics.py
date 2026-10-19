@@ -16,6 +16,13 @@ FRAUD_SCORE = Histogram(
 )
 FRAUD_DECISIONS = Counter("ml_fraud_decisions_total", "Fraud decisions", ["decision"])
 INVALID_EVENTS = Counter("ml_invalid_events_total", "Events rejected as invalid")
+CATEGORIZE_LATENCY = Histogram("ml_categorize_batch_seconds", "Categorization batch latency")
+CATEGORIZE_ITEMS = Counter("ml_categorize_items_total", "Transactions categorized")
+CATEGORIZE_CONFIDENCE = Histogram(
+    "ml_categorize_confidence",
+    "Distribution of categorization confidence",
+    buckets=(0.2, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 1.0),
+)
 
 
 def setup_metrics(app: FastAPI) -> None:
