@@ -86,3 +86,8 @@ finflow:
       max-transfers-per-hour: 10
       night-amount: 20000
       night-end-hour: 6
+  storage:
+    endpoint: ${MINIO_ENDPOINT:http://localhost:9000}
+    access-key: ${MINIO_ROOT_USER:finflow}
+    secret-key: ${MINIO_ROOT_PASSWORD:finflow-minio}
+    bucket: finflow-statements

@@ -30,6 +30,7 @@ val springdocVersion = "2.6.0"
 val testcontainersVersion = "1.20.3"
 val bucket4jVersion = "8.10.1"
 val shedlockVersion = "5.16.0"
+val minioVersion = "8.5.12"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -44,6 +45,7 @@ dependencies {
     implementation("org.mapstruct:mapstruct:$mapstructVersion")
     implementation("com.bucket4j:bucket4j-core:$bucket4jVersion")
     implementation("com.github.ben-manes.caffeine:caffeine")
+    implementation("io.minio:minio:$minioVersion")
     implementation("org.springframework.kafka:spring-kafka")
     implementation("net.javacrumbs.shedlock:shedlock-spring:$shedlockVersion")
     implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:$shedlockVersion")
@@ -61,6 +63,7 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter:$testcontainersVersion")
     testImplementation("org.testcontainers:postgresql:$testcontainersVersion")
     testImplementation("org.testcontainers:kafka:$testcontainersVersion")
+    testImplementation("org.testcontainers:minio:$testcontainersVersion")
     testImplementation("com.networknt:json-schema-validator:1.5.1")
     testCompileOnly("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")
