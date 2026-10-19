@@ -66,6 +66,19 @@ services:
     ports:
       - "${KAFKA_UI_PORT:-8090}:8080"
 
+  finflow-ml:
+    build: ../finflow-ml
+    container_name: finflow-ml
+    depends_on:
+      kafka-init:
+        condition: service_completed_successfully
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      ML_API_KEY: ${ML_API_KEY:?ML_API_KEY is required}
+      FRAUD_HOLD_THRESHOLD: ${FRAUD_HOLD_THRESHOLD:-0.7}
+    ports:
+      - "${ML_PORT:-8000}:8000"
+
   finflow-core:
     build: ../finflow-core
     container_name: finflow-core
