@@ -1,0 +1,15 @@
+{
+  "eventId": "0192f1c4-1a2b-7d43-8a50-8e4c7fb03d55",
+  "eventType": "TransactionsImported",
+  "version": 1,
+  "occurredAt": "2026-10-15T09:30:00Z",
+  "payload": {
+    "importId": "0192f1c3-9f8e-7c21-9b10-4a3d2c1b0e66",
+    "userId": "0192f1b0-1111-7000-8000-000000000001",
+    "importedRows": 118,
+    "skippedRows": 4,
+    "failedRows": 2,
+    "earliestDate": "2026-09-01",
+    "latestDate": "2026-09-30"
+  }
+}

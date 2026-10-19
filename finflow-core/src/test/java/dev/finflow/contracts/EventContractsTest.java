@@ -13,6 +13,7 @@ import com.networknt.schema.JsonSchemaFactory;
 import com.networknt.schema.SchemaValidatorsConfig;
 import com.networknt.schema.SpecVersion;
 import dev.finflow.common.outbox.EventEnvelope;
+import dev.finflow.importing.messaging.TransactionsImported;
 import dev.finflow.transfer.domain.FraudSource;
 import dev.finflow.transfer.domain.TransferStatus;
 import dev.finflow.transfer.messaging.FraudCheckResult;
@@ -58,7 +59,7 @@ class EventContractsTest {
     @Test
     void examplesMatchTheirSchemas() throws IOException {
         for (String name : new String[] {"transfer-check-requested", "fraud-check-completed",
-                "transfer-status-changed"}) {
+                "transfer-status-changed", "transactions-imported"}) {
             assertThat(schema(name).validate(example(name))).as(name).isEmpty();
         }
     }
@@ -74,6 +75,9 @@ class EventContractsTest {
 
         assertThat(valid("transfer-check-requested", envelope("TransferCheckRequested", check))).isTrue();
         assertThat(valid("transfer-status-changed", envelope("TransferStatusChanged", changed))).isTrue();
+        TransactionsImported imported = new TransactionsImported(UUID.randomUUID(), UUID.randomUUID(), 10, 1, 0,
+                java.time.LocalDate.of(2026, 9, 1), java.time.LocalDate.of(2026, 9, 30));
+        assertThat(valid("transactions-imported", envelope("TransactionsImported", imported))).isTrue();
     }
 
     @Test

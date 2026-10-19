@@ -8,6 +8,7 @@ with `eventId`, `eventType`, `version`, `occurredAt` and `payload`.
 | `transfers.check` | finflow-core | finflow-ml | `transfer-check-requested.schema.json` |
 | `transfers.check.result` | finflow-ml | finflow-core | `fraud-check-completed.schema.json` |
 | `transfers.status-changed` | finflow-core | downstream services | `transfer-status-changed.schema.json` |
+| `transactions.imported` | finflow-core | finflow-core (budgets) | `transactions-imported.schema.json` |
 
 Rules:
 

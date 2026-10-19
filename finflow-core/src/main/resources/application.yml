@@ -35,6 +35,11 @@ spring:
       enable-auto-commit: false
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      initialize-schema: never
   jackson:
     default-property-inclusion: non_null
     deserialization:
