@@ -12,6 +12,7 @@ spring:
     hibernate:
       ddl-auto: validate
     properties:
+      org.hibernate.envers.store_data_at_delete: true
       hibernate:
         jdbc:
           time_zone: UTC

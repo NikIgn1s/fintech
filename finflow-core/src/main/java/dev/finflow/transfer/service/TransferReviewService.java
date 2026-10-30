@@ -33,6 +33,7 @@ public class TransferReviewService {
     private final TransferEventPublisher events;
     private final AdminTransferMapper mapper;
     private final Clock clock;
+    private final dev.finflow.audit.api.AuditRecorder audit;
 
     @Transactional(readOnly = true)
     public AdminTransferPage list(TransferStatus status, int page, int size) {
@@ -64,6 +65,8 @@ public class TransferReviewService {
 
     private AdminTransferResponse finish(Transfer transfer, TransferReview review, Instant now) {
         reviews.save(review);
+        audit.record(review.getReviewerId(),"transfer",transfer.getId().toString(),
+                review.getDecision().name(),review.getReason());
         events.statusChanged(transfer, DECIDED_BY, now);
         return mapper.toResponse(transfer);
     }

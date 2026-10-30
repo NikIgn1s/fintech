@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CategorizationService {
     private final JdbcTemplate jdbc;
     private final MlCategorizerClient ml;
+    private final dev.finflow.categorization.repository.CategoryRuleRepository ruleRepository;
 
     public record Rule(long id, String pattern, short categoryId, int priority) {}
     private record Row(long id, String description, BigDecimal amount, String mcc) {}
@@ -75,17 +76,19 @@ public class CategorizationService {
 
     @Transactional
     public Rule createRule(UUID userId, String pattern, short categoryId, int priority) {
-        var ids = jdbc.query("insert into category_rules(user_id, pattern, category_id, priority) "
-                + "select ?, ?, id, ? from categories where id = ? returning id",
-                (rs, n) -> rs.getLong(1), userId, pattern.trim(), priority, categoryId);
-        if (ids.isEmpty()) throw new dev.finflow.common.error.NotFoundException("Category not found");
-        return new Rule(ids.getFirst(), pattern.trim(), categoryId, priority);
+        if (!Boolean.TRUE.equals(jdbc.queryForObject("select exists(select 1 from categories where id=?)",
+                Boolean.class,categoryId)))
+            throw new dev.finflow.common.error.NotFoundException("Category not found");
+        var entity=ruleRepository.saveAndFlush(dev.finflow.categorization.domain.CategoryRule
+                .create(userId,pattern.trim(),categoryId,priority));
+        return new Rule(entity.getId(),entity.getPattern(),entity.getCategoryId(),entity.getPriority());
     }
 
     @Transactional
-    public void deleteRule(UUID userId, long id) {
-        if (jdbc.update("delete from category_rules where id = ? and user_id = ?", id, userId) == 0)
-            throw new dev.finflow.common.error.NotFoundException("Rule not found");
+    public void deleteRule(UUID userId,long id) {
+        var entity=ruleRepository.findByIdAndUserId(id,userId)
+                .orElseThrow(() -> new dev.finflow.common.error.NotFoundException("Rule not found"));
+        ruleRepository.delete(entity);
     }
 
     private void assignCode(long id, UUID userId, String code, String source, BigDecimal confidence) {

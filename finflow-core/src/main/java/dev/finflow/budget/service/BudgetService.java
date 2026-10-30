@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class BudgetService {
     private final JdbcTemplate jdbc;
     private final OutboxPublisher outbox;
+    private final dev.finflow.budget.repository.BudgetRepository budgets;
     public record Budget(long id, short categoryId, LocalDate month, String currency,
             BigDecimal limit, BigDecimal spent) {}
     public record Alert(long budgetId, UUID userId, short categoryId, LocalDate month,
@@ -24,9 +25,11 @@ public class BudgetService {
     public Budget save(UUID userId, short categoryId, LocalDate month, String currency, BigDecimal limit) {
         if (!Boolean.TRUE.equals(jdbc.queryForObject("select exists(select 1 from categories where id = ?)",
                 Boolean.class, categoryId))) throw new NotFoundException("Category not found");
-        jdbc.update("insert into budgets(user_id, category_id, month, currency, amount_limit) values (?, ?, ?, ?, ?) "
-                + "on conflict(user_id, category_id, month, currency) do update set amount_limit = excluded.amount_limit",
-                userId, categoryId, month, currency, limit);
+        jdbc.queryForObject("select id from users where id=? for update", UUID.class, userId);
+        var entity=budgets.findByUserIdAndCategoryIdAndMonthAndCurrency(userId,categoryId,month,currency)
+                .orElseGet(() -> dev.finflow.budget.domain.BudgetEntity.create(userId,categoryId,month,currency,limit));
+        entity.changeLimit(limit);
+        budgets.saveAndFlush(entity);
         recalculate(userId);
         return list(userId, month).stream().filter(b -> b.categoryId() == categoryId && b.currency().equals(currency))
                 .findFirst().orElseThrow();

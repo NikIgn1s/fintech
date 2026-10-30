@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+@org.hibernate.envers.Audited
 @Entity
 @Table(name = "transfers")
 @Getter
