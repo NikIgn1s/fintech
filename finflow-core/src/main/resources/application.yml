@@ -64,6 +64,9 @@ management:
         enabled: true
 
 finflow:
+  analytics:
+    refresh-enabled: ${ANALYTICS_REFRESH_ENABLED:true}
+    refresh-interval: 900000
   ml:
     retry-enabled: ${ML_RETRY_ENABLED:true}
     retry-interval: 300000

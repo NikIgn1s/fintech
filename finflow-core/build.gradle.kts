@@ -83,6 +83,7 @@ tasks.withType<Test> {
     environment("KAFKA_LISTENERS_ENABLED", "false")
     environment("FRAUD_FALLBACK_ENABLED", "false")
     environment("ML_RETRY_ENABLED", "false")
+    environment("ANALYTICS_REFRESH_ENABLED", "false")
     finalizedBy(tasks.jacocoTestReport)
 }
 
