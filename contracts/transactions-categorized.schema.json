@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://finflow.dev/contracts/transactions-categorized.schema.json",
+  "title": "TransactionsCategorized",
+  "type": "object",
+  "required": [
+    "eventId",
+    "eventType",
+    "version",
+    "occurredAt",
+    "payload"
+  ],
+  "properties": {
+    "eventId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "eventType": {
+      "const": "TransactionsCategorized"
+    },
+    "version": {
+      "const": 1
+    },
+    "occurredAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "payload": {
+      "type": "object",
+      "required": [
+        "importId",
+        "userId"
+      ],
+      "properties": {
+        "importId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "userId": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    }
+  }
+}

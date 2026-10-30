@@ -91,8 +91,8 @@ class ImportJobTest extends AbstractPostgresTest {
         Map<String, Object> first = jdbc.queryForMap("select * from bank_transactions where import_id = ? "
                 + "and mcc = '5411'", importId);
         assertThat(first.get("merchant")).isEqualTo("PYATEROCHKA");
-        assertThat(first.get("category_source")).isEqualTo("NONE");
-        assertThat(first.get("category_id")).isNull();
+        assertThat(first.get("category_source")).isEqualTo("MCC");
+        assertThat(first.get("category_id")).isNotNull();
         assertThat(first.get("raw_description")).isEqualTo("PYATEROCHKA 1234 MOSCOW RUS");
 
         String event = jdbc.queryForObject("select payload::text from outbox_events where aggregate_id = ? "

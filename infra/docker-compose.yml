@@ -108,6 +108,8 @@ services:
       minio:
         condition: service_healthy
     environment:
+      ML_URL: http://finflow-ml:8000
+      ML_API_KEY: ${ML_API_KEY:?ML_API_KEY is required}
       DB_URL: jdbc:postgresql://postgres:5432/finflow
       DB_USER: finflow
       DB_PASSWORD: ${PG_PASSWORD}

@@ -47,6 +47,8 @@ dependencies {
     implementation("com.bucket4j:bucket4j-core:$bucket4jVersion")
     implementation("com.github.ben-manes.caffeine:caffeine")
     implementation("io.minio:minio:$minioVersion")
+    implementation("io.github.resilience4j:resilience4j-circuitbreaker:2.2.0")
+    implementation("io.github.resilience4j:resilience4j-retry:2.2.0")
     implementation("org.springframework.kafka:spring-kafka")
     implementation("net.javacrumbs.shedlock:shedlock-spring:$shedlockVersion")
     implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:$shedlockVersion")
@@ -80,6 +82,7 @@ tasks.withType<Test> {
     environment("OUTBOX_ENABLED", "false")
     environment("KAFKA_LISTENERS_ENABLED", "false")
     environment("FRAUD_FALLBACK_ENABLED", "false")
+    environment("ML_RETRY_ENABLED", "false")
     finalizedBy(tasks.jacocoTestReport)
 }
 

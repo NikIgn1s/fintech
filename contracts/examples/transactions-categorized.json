@@ -1,0 +1,10 @@
+{
+  "eventId": "0192f1b2-0000-7000-8000-000000000003",
+  "eventType": "TransactionsCategorized",
+  "version": 1,
+  "occurredAt": "2026-10-30T10:00:00Z",
+  "payload": {
+    "importId": "0192f1b2-0000-7000-8000-000000000001",
+    "userId": "0192f1b2-0000-7000-8000-000000000002"
+  }
+}

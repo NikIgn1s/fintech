@@ -59,7 +59,7 @@ class EventContractsTest {
     @Test
     void examplesMatchTheirSchemas() throws IOException {
         for (String name : new String[] {"transfer-check-requested", "fraud-check-completed",
-                "transfer-status-changed", "transactions-imported"}) {
+                "transfer-status-changed", "transactions-imported", "transactions-categorized", "budget-threshold-exceeded"}) {
             assertThat(schema(name).validate(example(name))).as(name).isEmpty();
         }
     }
@@ -75,6 +75,9 @@ class EventContractsTest {
 
         assertThat(valid("transfer-check-requested", envelope("TransferCheckRequested", check))).isTrue();
         assertThat(valid("transfer-status-changed", envelope("TransferStatusChanged", changed))).isTrue();
+        var alert = new dev.finflow.budget.service.BudgetService.Alert(1, UUID.randomUUID(), (short) 1,
+                java.time.LocalDate.of(2026, 10, 1), "RUB", 80, "1000.0000", "800.0000");
+        assertThat(valid("budget-threshold-exceeded", envelope("BudgetThresholdExceeded", alert))).isTrue();
         TransactionsImported imported = new TransactionsImported(UUID.randomUUID(), UUID.randomUUID(), 10, 1, 0,
                 java.time.LocalDate.of(2026, 9, 1), java.time.LocalDate.of(2026, 9, 30));
         assertThat(valid("transactions-imported", envelope("TransactionsImported", imported))).isTrue();

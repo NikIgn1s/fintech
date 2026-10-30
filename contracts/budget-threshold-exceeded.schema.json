@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://finflow.dev/contracts/budget-threshold-exceeded.schema.json",
+  "title": "BudgetThresholdExceeded",
+  "type": "object",
+  "required": [
+    "eventId",
+    "eventType",
+    "version",
+    "occurredAt",
+    "payload"
+  ],
+  "properties": {
+    "eventId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "eventType": {
+      "const": "BudgetThresholdExceeded"
+    },
+    "version": {
+      "const": 1
+    },
+    "occurredAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "payload": {
+      "type": "object",
+      "required": [
+        "budgetId",
+        "userId",
+        "categoryId",
+        "month",
+        "currency",
+        "threshold",
+        "limit",
+        "spent"
+      ],
+      "properties": {
+        "budgetId": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "userId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "categoryId": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "month": {
+          "type": "string",
+          "format": "date"
+        },
+        "currency": {
+          "enum": [
+            "RUB",
+            "USD",
+            "EUR"
+          ]
+        },
+        "threshold": {
+          "enum": [
+            80,
+            100
+          ]
+        },
+        "limit": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d{4}$"
+        },
+        "spent": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d{4}$"
+        }
+      }
+    }
+  }
+}

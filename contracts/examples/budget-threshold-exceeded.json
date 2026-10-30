@@ -1,0 +1,16 @@
+{
+  "eventId": "0192f1b2-0000-7000-8000-000000000003",
+  "eventType": "BudgetThresholdExceeded",
+  "version": 1,
+  "occurredAt": "2026-10-30T10:00:00Z",
+  "payload": {
+    "budgetId": 1,
+    "userId": "0192f1b2-0000-7000-8000-000000000002",
+    "categoryId": 1,
+    "month": "2026-10-01",
+    "currency": "RUB",
+    "threshold": 80,
+    "limit": "1000.0000",
+    "spent": "800.0000"
+  }
+}

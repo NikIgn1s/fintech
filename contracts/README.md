@@ -10,6 +10,9 @@ with `eventId`, `eventType`, `version`, `occurredAt` and `payload`.
 | `transfers.status-changed` | finflow-core | downstream services | `transfer-status-changed.schema.json` |
 | `transactions.imported` | finflow-core | finflow-core (budgets) | `transactions-imported.schema.json` |
 
+| `transactions.categorized` | finflow-core | finflow-core (budgets) | `transactions-categorized.schema.json` |
+| `budget.alerts` | finflow-core | downstream services | `budget-threshold-exceeded.schema.json` |
+
 Rules:
 
 - Amounts are strings with four decimals, timestamps are ISO-8601 in UTC, identifiers are UUIDs.

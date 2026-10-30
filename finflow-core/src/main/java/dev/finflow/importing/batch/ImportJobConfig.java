@@ -41,11 +41,12 @@ public class ImportJobConfig {
     private final DescriptionNormalizer normalizer;
 
     @Bean
-    Job statementImportJob(JobRepository repository, Step parseStep, Step finalizeStep,
+    Job statementImportJob(JobRepository repository, Step parseStep, Step categorizeStep, Step finalizeStep,
             ImportJobListener listener) {
         return new JobBuilder(JOB_NAME, repository)
                 .listener(listener)
                 .start(parseStep)
+                .next(categorizeStep)
                 .next(finalizeStep)
                 .build();
     }
@@ -65,6 +66,23 @@ public class ImportJobConfig {
                 .skipLimit(SKIP_LIMIT)
                 .listener(skipListener)
                 .build();
+    }
+
+    @Bean
+    Step categorizeStep(JobRepository repository, PlatformTransactionManager transactions,
+            Tasklet categorizeTasklet) {
+        return new StepBuilder("categorizeStep", repository).tasklet(categorizeTasklet, transactions).build();
+    }
+
+    @Bean
+    @StepScope
+    Tasklet categorizeTasklet(@Value("#{jobParameters['importId']}") String importId,
+            @Value("#{jobParameters['userId']}") String userId,
+            dev.finflow.categorization.service.CategorizationService service) {
+        return (contribution, context) -> {
+            service.categorize(UUID.fromString(importId), UUID.fromString(userId));
+            return RepeatStatus.FINISHED;
+        };
     }
 
     @Bean
