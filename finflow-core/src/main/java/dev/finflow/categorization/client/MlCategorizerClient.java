@@ -23,14 +23,20 @@ public class MlCategorizerClient {
     public record Response(List<Result> results) {}
 
     private final RestClient client;
+    private final io.micrometer.core.instrument.MeterRegistry metrics;
     private final CircuitBreaker breaker = CircuitBreaker.of("categorizer",
             CircuitBreakerConfig.custom().minimumNumberOfCalls(5).slidingWindowSize(10)
                     .waitDurationInOpenState(Duration.ofSeconds(30)).build());
     private final Retry retry = Retry.of("categorizer",
             RetryConfig.custom().maxAttempts(3).waitDuration(Duration.ofMillis(100)).build());
 
+    @org.springframework.beans.factory.annotation.Autowired
     public MlCategorizerClient(@Value("${finflow.ml.url:http://localhost:8000}") String url,
-            @Value("${finflow.ml.api-key:}") String apiKey) {
+            @Value("${finflow.ml.api-key:}") String apiKey,io.micrometer.core.instrument.MeterRegistry metrics) {
+        this.metrics=metrics;
+        metrics.gauge("ml_client_circuit_breaker_state",breaker,b -> switch(b.getState().name()) {
+            case "CLOSED" -> 0; case "OPEN" -> 1; case "HALF_OPEN" -> 2; default -> 3;
+        });
         var factory = new SimpleClientHttpRequestFactory();
         factory.setConnectTimeout(3000);
         factory.setReadTimeout(3000);
@@ -38,10 +44,14 @@ public class MlCategorizerClient {
                 .requestFactory(factory).build();
     }
 
+    public MlCategorizerClient(String url,String apiKey) {
+        this(url,apiKey,new io.micrometer.core.instrument.simple.SimpleMeterRegistry());
+    }
+
     public List<Result> categorize(List<Item> items) {
         if (items.isEmpty()) return List.of();
         try {
-            return breaker.executeSupplier(() -> retry.executeSupplier(() -> {
+            List<Result> result=breaker.executeSupplier(() -> retry.executeSupplier(() -> {
                 Response response = client.post().uri("/categorize").body(new Request(items))
                         .retrieve().body(Response.class);
                 if (response == null || response.results() == null) {
@@ -49,7 +59,10 @@ public class MlCategorizerClient {
                 }
                 return response.results().stream().filter(java.util.Objects::nonNull).toList();
             }));
+            metrics.counter("ml_client_requests","outcome","success").increment();
+            return result;
         } catch (RuntimeException error) {
+            metrics.counter("ml_client_requests","outcome","failure").increment();
             return List.of();
         }
     }

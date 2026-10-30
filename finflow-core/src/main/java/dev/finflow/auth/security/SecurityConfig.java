@@ -34,7 +34,8 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http, JwtService jwtService,
             ProblemAuthenticationEntryPoint entryPoint, ProblemAccessDeniedHandler accessDeniedHandler,
             IdempotencyStore idempotencyStore, RateLimiter rateLimiter,
-            ProblemResponseWriter problemResponseWriter) throws Exception {
+            ProblemResponseWriter problemResponseWriter,
+            @org.springframework.beans.factory.annotation.Value("${finflow.monitoring.token:}") String monitoringToken) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
@@ -43,11 +44,14 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(PUBLIC_PATHS).permitAll()
+                        .requestMatchers("/actuator/prometheus").hasAnyRole("ADMIN", "METRICS")
                         .anyRequest().authenticated())
                 .exceptionHandling(handling -> handling
                         .authenticationEntryPoint(entryPoint)
                         .accessDeniedHandler(accessDeniedHandler))
                 .addFilterBefore(new JwtAuthenticationFilter(jwtService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new dev.finflow.observability.MonitoringTokenFilter(monitoringToken),
+                        JwtAuthenticationFilter.class)
                 .addFilterAfter(new RateLimitFilter(rateLimiter, problemResponseWriter),
                         JwtAuthenticationFilter.class)
                 .addFilterAfter(new IdempotencyFilter(idempotencyStore, problemResponseWriter),

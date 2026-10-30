@@ -1,0 +1,46 @@
+rule_files:
+  - alerts.yml
+evaluation_interval: 1m
+tests:
+  - interval: 1m
+    input_series:
+      - series: 'ledger_reconciliation_mismatch{job="finflow-core"}'
+        values: '1 1 1 1 1 1 1'
+      - series: 'outbox_unpublished_events{job="finflow-core"}'
+        values: '1500 1500 1500 1500 1500 1500 1500'
+      - series: 'pending_check_oldest_seconds{job="finflow-core"}'
+        values: '200 200 200 200 200 200 200'
+    alert_rule_test:
+      - eval_time: 6m
+        alertname: LedgerReconciliationMismatch
+        exp_alerts:
+          - exp_labels: {job: finflow-core, severity: critical}
+            exp_annotations: {summary: Ledger balance differs from postings}
+      - eval_time: 6m
+        alertname: OutboxBacklog
+        exp_alerts:
+          - exp_labels: {job: finflow-core, severity: warning}
+            exp_annotations: {summary: More than 1000 events await publication}
+      - eval_time: 6m
+        alertname: TransferCheckStalled
+        exp_alerts:
+          - exp_labels: {job: finflow-core, severity: warning}
+            exp_annotations: {summary: A transfer has awaited fraud checking for more than two minutes}
+  - interval: 1m
+    input_series:
+      - series: 'ledger_reconciliation_mismatch{job="finflow-core"}'
+        values: '0 0 0 0'
+      - series: 'outbox_unpublished_events{job="finflow-core"}'
+        values: '1000 1000 1000 1000'
+      - series: 'pending_check_oldest_seconds{job="finflow-core"}'
+        values: '120 120 120 120'
+    alert_rule_test:
+      - eval_time: 3m
+        alertname: LedgerReconciliationMismatch
+        exp_alerts: []
+      - eval_time: 3m
+        alertname: OutboxBacklog
+        exp_alerts: []
+      - eval_time: 3m
+        alertname: TransferCheckStalled
+        exp_alerts: []

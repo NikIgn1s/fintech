@@ -30,6 +30,7 @@ public class FraudDecisionService {
     private final TransferSettlement settlement;
     private final TransferEventPublisher events;
     private final Clock clock;
+    private final org.springframework.context.ApplicationEventPublisher metricsEvents;
 
     @Transactional
     public Outcome apply(FraudVerdict verdict) {
@@ -55,6 +56,8 @@ public class FraudDecisionService {
         fraudChecks.save(FraudCheck.record(transfer.getId(), verdict.score(), verdict.modelVersion(),
                 verdict.decision(), verdict.source(), verdict.featuresJson(), now));
         events.statusChanged(transfer, verdict.source().name(), now);
+        metricsEvents.publishEvent(new dev.finflow.observability.TransferMetrics.Checked(
+                verdict.decision().name(),verdict.source().name(),java.time.Duration.between(transfer.getCreatedAt(),now)));
         return Outcome.APPLIED;
     }
 

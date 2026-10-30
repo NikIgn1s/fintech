@@ -114,6 +114,7 @@ services:
       DB_USER: finflow
       DB_PASSWORD: ${PG_PASSWORD}
       JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required}
+      MONITORING_TOKEN: ${MONITORING_TOKEN:?MONITORING_TOKEN is required}
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       MINIO_ENDPOINT: http://minio:9000
       MINIO_ROOT_USER: ${MINIO_ROOT_USER:-finflow}
@@ -121,7 +122,55 @@ services:
     ports:
       - "${CORE_PORT:-8080}:8080"
 
+  kafka-exporter:
+    image: danielqsj/kafka-exporter:v1.8.0
+    command: ["--kafka.server=kafka:9092"]
+    depends_on:
+      kafka:
+        condition: service_healthy
+
+  prometheus:
+    image: prom/prometheus:v2.55.1
+    depends_on:
+      finflow-core:
+        condition: service_started
+      finflow-ml:
+        condition: service_started
+      kafka-exporter:
+        condition: service_started
+    environment:
+      MONITORING_TOKEN: ${MONITORING_TOKEN:?MONITORING_TOKEN is required}
+    entrypoint: ["/bin/sh", "-ec"]
+    command:
+      - |
+        printf '%s' "$$MONITORING_TOKEN" > /tmp/monitoring-token
+        exec /bin/prometheus --config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus --storage.tsdb.retention.time=15d
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/alerts.yml:/etc/prometheus/alerts.yml:ro
+      - prometheusdata:/prometheus
+    ports:
+      - "127.0.0.1:${PROMETHEUS_PORT:-9090}:9090"
+
+  grafana:
+    image: grafana/grafana:11.3.0
+    depends_on:
+      prometheus:
+        condition: service_started
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:?GRAFANA_ADMIN_PASSWORD is required}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafanadata:/var/lib/grafana
+    ports:
+      - "127.0.0.1:${GRAFANA_PORT:-3000}:3000"
+
 volumes:
   pgdata: {}
   kafkadata: {}
   miniodata: {}
+  prometheusdata: {}
+  grafanadata: {}

@@ -1,0 +1,52 @@
+groups:
+  - name: finflow
+    rules:
+      - alert: FinflowCoreDown
+        expr: up{job="finflow-core"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: Core metrics endpoint is unavailable
+      - alert: FinflowMlDown
+        expr: up{job="finflow-ml"} == 0
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: ML metrics endpoint is unavailable
+      - alert: LedgerReconciliationMismatch
+        expr: ledger_reconciliation_mismatch > 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: Ledger balance differs from postings
+      - alert: OutboxBacklog
+        expr: outbox_unpublished_events > 1000
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: More than 1000 events await publication
+      - alert: TransferCheckStalled
+        expr: pending_check_oldest_seconds > 120
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: A transfer has awaited fraud checking for more than two minutes
+      - alert: CoreHighErrorRate
+        expr: sum(rate(http_server_requests_seconds_count{job="finflow-core",status=~"5.."}[5m])) / clamp_min(sum(rate(http_server_requests_seconds_count{job="finflow-core"}[5m])),0.001) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Core HTTP error ratio exceeds five percent
+      - alert: KafkaConsumerLag
+        expr: sum by (consumergroup) (kafka_consumergroup_lag) > 1000
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Kafka consumer backlog exceeds 1000 records

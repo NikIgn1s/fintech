@@ -38,6 +38,7 @@ public class TransferService {
     private final FraudFeatureCalculator featureCalculator;
     private final OutboxPublisher outbox;
     private final Clock clock;
+    private final org.springframework.context.ApplicationEventPublisher metricsEvents;
 
     @Transactional
     public TransferResponse create(UUID userId, CreateTransferCommand command) {
@@ -68,6 +69,7 @@ public class TransferService {
                 new Posting(suspense, amount)));
         outbox.publish("transfer", transfer.getId().toString(), EventTypes.TRANSFER_CHECK_REQUESTED,
                 Topics.TRANSFERS_CHECK, checkRequest);
+        metricsEvents.publishEvent(new dev.finflow.observability.TransferMetrics.Created());
         return mapper.toResponse(transfer);
     }
 
