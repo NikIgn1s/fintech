@@ -1,6 +1,5 @@
 package dev.finflow.auth.api;
 
-import dev.finflow.auth.security.AuthenticatedUser;
 import dev.finflow.auth.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

@@ -1,6 +1,6 @@
 package dev.finflow.transfer.service;
 
-import dev.finflow.account.service.AccountService;
+import dev.finflow.account.api.AccountAccess;
 import dev.finflow.common.messaging.EventTypes;
 import dev.finflow.common.messaging.Topics;
 import dev.finflow.common.outbox.OutboxPublisher;
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class TransferEventPublisher {
 
-    private final AccountService accounts;
+    private final AccountAccess accounts;
     private final OutboxPublisher outbox;
 
     @Transactional(propagation = Propagation.MANDATORY)

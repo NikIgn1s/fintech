@@ -1,4 +1,4 @@
-package dev.finflow.observability;
+package dev.finflow.observability.api;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;

@@ -1,7 +1,7 @@
 package dev.finflow.ledger.repository;
 
 import dev.finflow.ledger.domain.LedgerTransaction;
-import dev.finflow.ledger.domain.LedgerTransactionType;
+import dev.finflow.ledger.api.LedgerTransactionType;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 

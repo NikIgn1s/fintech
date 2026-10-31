@@ -1,6 +1,6 @@
 package dev.finflow.common.idempotency;
 
-import dev.finflow.auth.security.AuthenticatedUser;
+import dev.finflow.auth.api.AuthenticatedUser;
 import dev.finflow.common.error.ProblemResponseWriter;
 import dev.finflow.common.error.Problems;
 import jakarta.servlet.FilterChain;

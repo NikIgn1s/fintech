@@ -78,7 +78,7 @@ public class ImportJobConfig {
     @StepScope
     Tasklet categorizeTasklet(@Value("#{jobParameters['importId']}") String importId,
             @Value("#{jobParameters['userId']}") String userId,
-            dev.finflow.categorization.service.CategorizationService service) {
+            dev.finflow.categorization.api.StatementCategorizer service) {
         return (contribution, context) -> {
             service.categorize(UUID.fromString(importId), UUID.fromString(userId));
             return RepeatStatus.FINISHED;

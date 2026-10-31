@@ -1,5 +1,8 @@
 package dev.finflow.ledger.domain;
 
+import dev.finflow.ledger.api.LedgerTransactionType;
+
+
 import java.util.UUID;
 
 public class UnbalancedPostingException extends RuntimeException {

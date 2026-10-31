@@ -1,6 +1,6 @@
 package dev.finflow.audit.api;
 
-import dev.finflow.auth.security.AuthenticatedUser;
+import dev.finflow.auth.api.AuthenticatedUser;
 import java.util.UUID;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.context.request.RequestContextHolder;

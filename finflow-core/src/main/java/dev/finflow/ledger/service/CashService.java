@@ -1,9 +1,9 @@
 package dev.finflow.ledger.service;
 
 import dev.finflow.account.api.AccountResponse;
-import dev.finflow.account.domain.AccountStatus;
-import dev.finflow.account.service.AccountService;
-import dev.finflow.account.service.SystemAccountService;
+import dev.finflow.account.api.AccountStatus;
+import dev.finflow.account.api.AccountAccess;
+import dev.finflow.account.api.SystemAccounts;
 import dev.finflow.common.error.BusinessRuleException;
 import dev.finflow.common.id.UuidV7;
 import dev.finflow.common.money.Money;
@@ -11,8 +11,8 @@ import dev.finflow.ledger.LedgerService;
 import dev.finflow.ledger.api.CashOperationRequest;
 import dev.finflow.ledger.api.CashOperationResponse;
 import dev.finflow.ledger.domain.LedgerTransaction;
-import dev.finflow.ledger.domain.LedgerTransactionType;
-import dev.finflow.ledger.domain.Posting;
+import dev.finflow.ledger.api.LedgerTransactionType;
+import dev.finflow.ledger.api.Posting;
 import dev.finflow.ledger.repository.AccountBalanceRepository;
 import java.math.BigDecimal;
 import java.util.List;
@@ -25,8 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CashService {
 
-    private final AccountService accounts;
-    private final SystemAccountService systemAccounts;
+    private final AccountAccess accounts;
+    private final SystemAccounts systemAccounts;
     private final LedgerService ledger;
     private final AccountBalanceRepository balances;
 

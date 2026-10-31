@@ -57,11 +57,11 @@ class BusinessMetricsTest extends AbstractPostgresTest {
         var counter=metrics.counter("transfers.created","status","PENDING_CHECK");
         double before=counter.count();
         new TransactionTemplate(transactions).executeWithoutResult(status -> {
-            events.publishEvent(new TransferMetrics.Created());
+            events.publishEvent(new dev.finflow.transfer.api.events.TransferCreated());
             status.setRollbackOnly();
         });
         assertThat(counter.count()).isEqualTo(before);
-        new TransactionTemplate(transactions).executeWithoutResult(status -> events.publishEvent(new TransferMetrics.Created()));
+        new TransactionTemplate(transactions).executeWithoutResult(status -> events.publishEvent(new dev.finflow.transfer.api.events.TransferCreated()));
         assertThat(counter.count()).isEqualTo(before+1);
     }
 }

@@ -1,7 +1,7 @@
 package dev.finflow.account.repository;
 
 import dev.finflow.account.domain.Account;
-import dev.finflow.account.domain.AccountType;
+import dev.finflow.account.api.AccountType;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;

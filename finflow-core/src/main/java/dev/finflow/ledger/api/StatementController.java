@@ -1,6 +1,6 @@
 package dev.finflow.ledger.api;
 
-import dev.finflow.auth.security.AuthenticatedUser;
+import dev.finflow.auth.api.AuthenticatedUser;
 import dev.finflow.ledger.service.StatementService;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

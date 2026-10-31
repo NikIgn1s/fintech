@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import dev.finflow.common.money.Money;
 import dev.finflow.ledger.domain.InsufficientFundsException;
-import dev.finflow.ledger.domain.LedgerTransactionType;
-import dev.finflow.ledger.domain.Posting;
+import dev.finflow.ledger.api.LedgerTransactionType;
+import dev.finflow.ledger.api.Posting;
 import dev.finflow.support.AbstractPostgresTest;
 import java.math.BigDecimal;
 import java.util.ArrayList;

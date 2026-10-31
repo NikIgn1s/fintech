@@ -8,9 +8,9 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.finflow.account.service.AccountService;
 import dev.finflow.audit.service.AuditQueryService;
-import dev.finflow.auth.domain.Role;
+import dev.finflow.auth.api.Role;
 import dev.finflow.auth.repository.UserRepository;
-import dev.finflow.auth.security.AuthenticatedUser;
+import dev.finflow.auth.api.AuthenticatedUser;
 import dev.finflow.ledger.service.CashService;
 import dev.finflow.support.AbstractPostgresTest;
 import dev.finflow.transfer.domain.FraudDecision;

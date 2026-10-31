@@ -1,5 +1,7 @@
 package dev.finflow.ledger.domain;
 
+import dev.finflow.ledger.api.LedgerTransactionType;
+
 import dev.finflow.common.error.ConflictException;
 import java.util.UUID;
 

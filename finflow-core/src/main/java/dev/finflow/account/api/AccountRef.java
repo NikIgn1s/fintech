@@ -1,6 +1,5 @@
 package dev.finflow.account.api;
 
-import dev.finflow.account.domain.AccountStatus;
 import java.time.Instant;
 import java.util.UUID;
 

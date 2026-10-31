@@ -2,17 +2,17 @@ package dev.finflow.transfer.service;
 
 import dev.finflow.account.api.AccountRef;
 import dev.finflow.account.api.AccountResponse;
-import dev.finflow.account.domain.AccountStatus;
-import dev.finflow.account.service.AccountService;
-import dev.finflow.account.service.SystemAccountService;
+import dev.finflow.account.api.AccountStatus;
+import dev.finflow.account.api.AccountAccess;
+import dev.finflow.account.api.SystemAccounts;
 import dev.finflow.common.error.BusinessRuleException;
 import dev.finflow.common.messaging.EventTypes;
 import dev.finflow.common.messaging.Topics;
 import dev.finflow.common.money.Money;
 import dev.finflow.common.outbox.OutboxPublisher;
-import dev.finflow.ledger.LedgerService;
-import dev.finflow.ledger.domain.LedgerTransactionType;
-import dev.finflow.ledger.domain.Posting;
+import dev.finflow.ledger.api.LedgerOperations;
+import dev.finflow.ledger.api.LedgerTransactionType;
+import dev.finflow.ledger.api.Posting;
 import dev.finflow.transfer.api.TransferMapper;
 import dev.finflow.transfer.api.TransferResponse;
 import dev.finflow.transfer.domain.Transfer;
@@ -29,9 +29,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class TransferService {
 
-    private final AccountService accounts;
-    private final SystemAccountService systemAccounts;
-    private final LedgerService ledger;
+    private final AccountAccess accounts;
+    private final SystemAccounts systemAccounts;
+    private final LedgerOperations ledger;
     private final TransferRepository transfers;
     private final TransferMapper mapper;
     private final TransferLimitGuard limitGuard;
@@ -69,7 +69,7 @@ public class TransferService {
                 new Posting(suspense, amount)));
         outbox.publish("transfer", transfer.getId().toString(), EventTypes.TRANSFER_CHECK_REQUESTED,
                 Topics.TRANSFERS_CHECK, checkRequest);
-        metricsEvents.publishEvent(new dev.finflow.observability.TransferMetrics.Created());
+        metricsEvents.publishEvent(new dev.finflow.transfer.api.events.TransferCreated());
         return mapper.toResponse(transfer);
     }
 

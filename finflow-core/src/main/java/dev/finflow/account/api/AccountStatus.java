@@ -1,4 +1,4 @@
-package dev.finflow.account.domain;
+package dev.finflow.account.api;
 
 public enum AccountStatus {
     ACTIVE,

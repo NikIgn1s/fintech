@@ -1,6 +1,6 @@
 package dev.finflow.transfer.service;
 
-import dev.finflow.account.service.AccountService;
+import dev.finflow.account.api.AccountAccess;
 import dev.finflow.common.error.NotFoundException;
 import dev.finflow.transfer.api.TransferDirection;
 import dev.finflow.transfer.api.TransferMapper;
@@ -22,7 +22,7 @@ public class TransferQueryService {
     private static final UUID MAX_UUID = UUID.fromString("ffffffff-ffff-ffff-ffff-ffffffffffff");
 
     private final TransferRepository transfers;
-    private final AccountService accounts;
+    private final AccountAccess accounts;
     private final TransferMapper mapper;
 
     @Transactional(readOnly = true)

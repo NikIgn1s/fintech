@@ -1,6 +1,6 @@
 package dev.finflow.importing.api;
 
-import dev.finflow.auth.security.AuthenticatedUser;
+import dev.finflow.auth.api.AuthenticatedUser;
 import dev.finflow.importing.parser.BankFormat;
 import dev.finflow.importing.service.ImportService;
 import java.util.UUID;

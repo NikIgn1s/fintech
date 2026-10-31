@@ -1,10 +1,10 @@
 package dev.finflow.transfer.service;
 
-import dev.finflow.account.service.SystemAccountService;
+import dev.finflow.account.api.SystemAccounts;
 import dev.finflow.common.money.Money;
-import dev.finflow.ledger.LedgerService;
-import dev.finflow.ledger.domain.LedgerTransactionType;
-import dev.finflow.ledger.domain.Posting;
+import dev.finflow.ledger.api.LedgerOperations;
+import dev.finflow.ledger.api.LedgerTransactionType;
+import dev.finflow.ledger.api.Posting;
 import dev.finflow.transfer.domain.Transfer;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class TransferSettlement {
 
-    private final LedgerService ledger;
-    private final SystemAccountService systemAccounts;
+    private final LedgerOperations ledger;
+    private final SystemAccounts systemAccounts;
 
     @Transactional(propagation = Propagation.MANDATORY)
     public void settle(Transfer transfer) {

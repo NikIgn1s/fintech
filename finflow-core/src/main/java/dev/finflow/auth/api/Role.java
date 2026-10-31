@@ -1,4 +1,4 @@
-package dev.finflow.auth.domain;
+package dev.finflow.auth.api;
 
 public enum Role {
     USER,

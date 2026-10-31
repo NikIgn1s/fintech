@@ -1,5 +1,7 @@
 package dev.finflow.ledger.domain;
 
+import dev.finflow.ledger.api.Posting;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

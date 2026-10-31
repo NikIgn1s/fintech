@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.finflow.budget.service.BudgetService;
 import dev.finflow.common.messaging.*;
 import dev.finflow.common.outbox.EventEnvelope;
-import dev.finflow.importing.messaging.TransactionsImported;
+import dev.finflow.importing.api.events.TransactionsImported;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.kafka.annotation.KafkaListener;

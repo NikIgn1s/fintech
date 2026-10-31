@@ -1,4 +1,4 @@
-package dev.finflow.ledger.domain;
+package dev.finflow.ledger.api;
 
 public enum LedgerTransactionType {
     TRANSFER_RESERVE,

@@ -70,6 +70,7 @@ dependencies {
     testImplementation("org.testcontainers:kafka:$testcontainersVersion")
     testImplementation("org.testcontainers:minio:$testcontainersVersion")
     testImplementation("com.networknt:json-schema-validator:1.5.1")
+    testImplementation("com.tngtech.archunit:archunit-junit5:1.3.0")
     testCompileOnly("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")
 }

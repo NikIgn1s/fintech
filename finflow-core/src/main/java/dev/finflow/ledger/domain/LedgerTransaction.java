@@ -1,5 +1,9 @@
 package dev.finflow.ledger.domain;
 
+import dev.finflow.ledger.api.LedgerTransactionType;
+
+import dev.finflow.ledger.api.Posting;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

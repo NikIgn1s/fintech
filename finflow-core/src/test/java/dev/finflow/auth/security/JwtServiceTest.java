@@ -1,9 +1,11 @@
 package dev.finflow.auth.security;
 
+import dev.finflow.auth.api.AuthenticatedUser;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import dev.finflow.auth.domain.Role;
+import dev.finflow.auth.api.Role;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;

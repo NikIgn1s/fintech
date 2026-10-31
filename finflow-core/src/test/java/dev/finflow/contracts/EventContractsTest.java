@@ -13,7 +13,7 @@ import com.networknt.schema.JsonSchemaFactory;
 import com.networknt.schema.SchemaValidatorsConfig;
 import com.networknt.schema.SpecVersion;
 import dev.finflow.common.outbox.EventEnvelope;
-import dev.finflow.importing.messaging.TransactionsImported;
+import dev.finflow.importing.api.events.TransactionsImported;
 import dev.finflow.transfer.domain.FraudSource;
 import dev.finflow.transfer.domain.TransferStatus;
 import dev.finflow.transfer.messaging.FraudCheckResult;

@@ -1,5 +1,7 @@
 package dev.finflow.auth.domain;
 
+import dev.finflow.auth.api.Role;
+
 import dev.finflow.common.id.UuidV7;
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;

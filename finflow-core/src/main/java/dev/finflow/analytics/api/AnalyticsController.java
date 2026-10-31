@@ -2,7 +2,7 @@ package dev.finflow.analytics.api;
 
 import dev.finflow.analytics.api.AnalyticsResponse.*;
 import dev.finflow.analytics.service.AnalyticsService;
-import dev.finflow.auth.security.AuthenticatedUser;
+import dev.finflow.auth.api.AuthenticatedUser;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

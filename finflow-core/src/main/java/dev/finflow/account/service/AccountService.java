@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class AccountService {
+public class AccountService implements dev.finflow.account.api.AccountAccess {
 
     static final String DEFAULT_CURRENCY = "RUB";
     static final Set<String> SUPPORTED_CURRENCIES = Set.of("RUB", "USD", "EUR");

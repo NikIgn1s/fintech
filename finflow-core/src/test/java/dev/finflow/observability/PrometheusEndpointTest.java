@@ -5,8 +5,8 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import dev.finflow.auth.domain.Role;
-import dev.finflow.auth.security.AuthenticatedUser;
+import dev.finflow.auth.api.Role;
+import dev.finflow.auth.api.AuthenticatedUser;
 import dev.finflow.support.AbstractPostgresTest;
 import java.util.List;
 import java.util.UUID;

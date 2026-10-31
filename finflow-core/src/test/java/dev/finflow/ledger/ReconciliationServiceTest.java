@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import dev.finflow.common.money.Money;
 import dev.finflow.ledger.domain.BalanceMismatch;
-import dev.finflow.ledger.domain.LedgerTransactionType;
-import dev.finflow.ledger.domain.Posting;
+import dev.finflow.ledger.api.LedgerTransactionType;
+import dev.finflow.ledger.api.Posting;
 import dev.finflow.ledger.domain.ReconciliationReport;
 import dev.finflow.ledger.service.ReconciliationService;
 import dev.finflow.support.AbstractPostgresTest;

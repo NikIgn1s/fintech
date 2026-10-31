@@ -56,7 +56,7 @@ public class FraudDecisionService {
         fraudChecks.save(FraudCheck.record(transfer.getId(), verdict.score(), verdict.modelVersion(),
                 verdict.decision(), verdict.source(), verdict.featuresJson(), now));
         events.statusChanged(transfer, verdict.source().name(), now);
-        metricsEvents.publishEvent(new dev.finflow.observability.TransferMetrics.Checked(
+        metricsEvents.publishEvent(new dev.finflow.transfer.api.events.TransferChecked(
                 verdict.decision().name(),verdict.source().name(),java.time.Duration.between(transfer.getCreatedAt(),now)));
         return Outcome.APPLIED;
     }

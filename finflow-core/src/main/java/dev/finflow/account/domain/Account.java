@@ -1,5 +1,9 @@
 package dev.finflow.account.domain;
 
+import dev.finflow.account.api.AccountType;
+
+import dev.finflow.account.api.AccountStatus;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

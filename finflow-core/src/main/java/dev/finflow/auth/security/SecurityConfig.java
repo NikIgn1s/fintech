@@ -50,7 +50,7 @@ public class SecurityConfig {
                         .authenticationEntryPoint(entryPoint)
                         .accessDeniedHandler(accessDeniedHandler))
                 .addFilterBefore(new JwtAuthenticationFilter(jwtService), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new dev.finflow.observability.MonitoringTokenFilter(monitoringToken),
+                .addFilterBefore(new dev.finflow.observability.api.MonitoringTokenFilter(monitoringToken),
                         JwtAuthenticationFilter.class)
                 .addFilterAfter(new RateLimitFilter(rateLimiter, problemResponseWriter),
                         JwtAuthenticationFilter.class)

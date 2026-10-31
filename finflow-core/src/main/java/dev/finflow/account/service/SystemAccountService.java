@@ -1,7 +1,7 @@
 package dev.finflow.account.service;
 
 import dev.finflow.account.domain.Account;
-import dev.finflow.account.domain.AccountType;
+import dev.finflow.account.api.AccountType;
 import dev.finflow.account.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class SystemAccountService {
+public class SystemAccountService implements dev.finflow.account.api.SystemAccounts {
 
     private final AccountRepository accounts;
 

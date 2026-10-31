@@ -1,7 +1,7 @@
 package dev.finflow.account.api;
 
 import dev.finflow.account.service.AccountService;
-import dev.finflow.auth.security.AuthenticatedUser;
+import dev.finflow.auth.api.AuthenticatedUser;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,7 @@
 package dev.finflow.ledger.service;
 
 import dev.finflow.account.api.AccountResponse;
-import dev.finflow.account.service.AccountService;
+import dev.finflow.account.api.AccountAccess;
 import dev.finflow.ledger.api.StatementItem;
 import dev.finflow.ledger.api.StatementPage;
 import dev.finflow.ledger.domain.LedgerEntry;
@@ -21,7 +21,7 @@ public class StatementService {
     private static final Instant MIN_TIME = Instant.EPOCH;
     private static final Instant MAX_TIME = Instant.parse("9999-12-31T23:59:59Z");
 
-    private final AccountService accounts;
+    private final AccountAccess accounts;
     private final LedgerEntryRepository entries;
 
     @Transactional(readOnly = true)

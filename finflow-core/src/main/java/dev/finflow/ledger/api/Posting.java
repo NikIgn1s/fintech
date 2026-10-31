@@ -1,4 +1,4 @@
-package dev.finflow.ledger.domain;
+package dev.finflow.ledger.api;
 
 import dev.finflow.common.money.Money;
 import java.util.Objects;

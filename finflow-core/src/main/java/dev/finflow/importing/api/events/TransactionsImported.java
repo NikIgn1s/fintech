@@ -1,4 +1,4 @@
-package dev.finflow.importing.messaging;
+package dev.finflow.importing.api.events;
 
 import java.time.LocalDate;
 import java.util.UUID;

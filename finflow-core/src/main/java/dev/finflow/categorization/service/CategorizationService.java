@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class CategorizationService {
+public class CategorizationService implements dev.finflow.categorization.api.StatementCategorizer {
     private final JdbcTemplate jdbc;
     private final MlCategorizerClient ml;
     private final dev.finflow.categorization.repository.CategoryRuleRepository ruleRepository;

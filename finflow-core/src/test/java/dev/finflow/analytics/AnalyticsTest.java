@@ -123,7 +123,7 @@ class AnalyticsTest extends AbstractPostgresTest {
         row(owner,"2026-10-10","-25","RUB",null,"Mine");
         row(stranger,"2026-10-10","-900","RUB",null,"Foreign");
         var authentication=new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
-                new dev.finflow.auth.security.AuthenticatedUser(owner,dev.finflow.auth.domain.Role.USER),
+                new dev.finflow.auth.api.AuthenticatedUser(owner,dev.finflow.auth.api.Role.USER),
                 null,java.util.List.of(new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_USER")));
         var principal=org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors
                 .authentication(authentication);

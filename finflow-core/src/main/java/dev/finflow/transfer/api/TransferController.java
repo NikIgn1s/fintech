@@ -1,6 +1,6 @@
 package dev.finflow.transfer.api;
 
-import dev.finflow.auth.security.AuthenticatedUser;
+import dev.finflow.auth.api.AuthenticatedUser;
 import dev.finflow.transfer.domain.TransferStatus;
 import dev.finflow.transfer.service.CreateTransferCommand;
 import dev.finflow.transfer.service.TransferQueryService;

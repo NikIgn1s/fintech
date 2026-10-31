@@ -3,7 +3,7 @@ package dev.finflow.importing.batch;
 import dev.finflow.common.messaging.EventTypes;
 import dev.finflow.common.messaging.Topics;
 import dev.finflow.common.outbox.OutboxPublisher;
-import dev.finflow.importing.messaging.TransactionsImported;
+import dev.finflow.importing.api.events.TransactionsImported;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.UUID;

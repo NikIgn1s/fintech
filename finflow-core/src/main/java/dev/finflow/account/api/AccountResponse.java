@@ -1,7 +1,5 @@
 package dev.finflow.account.api;
 
-import dev.finflow.account.domain.AccountStatus;
-import dev.finflow.account.domain.AccountType;
 import java.math.BigDecimal;
 import java.time.Instant;
 

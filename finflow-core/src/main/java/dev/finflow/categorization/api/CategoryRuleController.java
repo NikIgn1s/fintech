@@ -1,6 +1,6 @@
 package dev.finflow.categorization.api;
 
-import dev.finflow.auth.security.AuthenticatedUser;
+import dev.finflow.auth.api.AuthenticatedUser;
 import dev.finflow.categorization.service.CategorizationService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;

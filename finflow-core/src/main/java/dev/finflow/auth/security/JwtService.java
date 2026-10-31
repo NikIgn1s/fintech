@@ -1,6 +1,8 @@
 package dev.finflow.auth.security;
 
-import dev.finflow.auth.domain.Role;
+import dev.finflow.auth.api.AuthenticatedUser;
+
+import dev.finflow.auth.api.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;

@@ -5,7 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import dev.finflow.auth.domain.Role;
+import dev.finflow.auth.api.Role;
 import dev.finflow.common.config.ClockConfig;
 import dev.finflow.common.error.GlobalExceptionHandler;
 import dev.finflow.common.error.ProblemResponseWriter;

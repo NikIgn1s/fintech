@@ -3,7 +3,7 @@ package dev.finflow.auth.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import dev.finflow.auth.domain.Role;
+import dev.finflow.auth.api.Role;
 import dev.finflow.auth.domain.User;
 import dev.finflow.support.AbstractPostgresTest;
 import org.junit.jupiter.api.Test;
